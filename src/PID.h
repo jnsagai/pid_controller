@@ -1,5 +1,6 @@
 #ifndef PID_H
 #define PID_H
+#include <vector>
 
 class PID {
  public:
@@ -31,6 +32,14 @@ class PID {
    */
   double TotalError();
 
+  void SetGains(const std::vector<double> &gains);
+
+  /**
+   * 
+   * @output
+   */
+  double CalcSteerAngle(double Kp_, double Ki_, double Kd_);
+
  private:
   /**
    * PID Errors
@@ -38,6 +47,12 @@ class PID {
   double p_error;
   double i_error;
   double d_error;
+
+  /**
+   * Previous CTE
+   */
+
+  double prev_cte;
 
   /**
    * PID Coefficients
