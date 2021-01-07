@@ -74,12 +74,7 @@ int main()
           double angle = std::stod(j[1]["steering_angle"].get<string>());
           double steer_value;
           std::vector<double> gains;
-          /**
-           * TODO: Calculate steering value here, remember the steering value is
-           *   [-1, 1].
-           * NOTE: Feel free to play around with the throttle and speed.
-           *   Maybe use another PID controller to control the speed!
-           */
+
           pid_angle.UpdateError(cte);
           if(run_twiddle && !twiddle.DoneTwiddle()){
             twiddle.SetError(cte);
