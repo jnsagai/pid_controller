@@ -45,11 +45,11 @@ double PID::TotalError()
   return p_error * Kp + i_error * Ki + d_error * Kd;
 }
 
-void PID::SetGains(const std::vector<double> &gains)
+void PID::SetGains(const double Kp_G, const double Ki_G, const double Kd_G)
 {
-  Kp = gains[0];
-  Ki = gains[1];
-  Kd = gains[2];
+  Kp = Kp_G;
+  Ki = Ki_G;
+  Kd = Kd_G;
 }
 
 double PID::CalcSteerAngle(double Kp_, double Ki_, double Kd_)

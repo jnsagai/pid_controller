@@ -76,8 +76,9 @@ int main()
            */
           pid.UpdateError(cte);
           twiddle.SetError(cte);
+          twiddle.Run();
           gains = twiddle.GetParams();
-          pid.SetGains(gains);
+          pid.SetGains(gains[0], gains[1], gains[2]);
 
           steer_value -= pid.TotalError();
           // DEBUG
@@ -86,7 +87,7 @@ int main()
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          msgJson["throttle"] = 0.2;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);

@@ -5,7 +5,10 @@
 
 TWIDDLE::TWIDDLE(double tolerance) 
     :   tolerance(tolerance),
-        curr_state(START)
+        curr_state(START),
+        param_index(0),
+        params({ 0.0, 0.0, 0.0 }),
+        d_params({ 1.0, 1.0, 1.0 })        
     {}
 
 TWIDDLE::~TWIDDLE() {}
@@ -17,7 +20,7 @@ void TWIDDLE::Run()
         sum_dp += n;
     }
 
-    if(sum_dp > tolerance){
+    if(sum_dp < tolerance){
         curr_state = DONE;
     }
 
@@ -64,6 +67,8 @@ void TWIDDLE::Run()
     default:
         break;
     }
+
+    std::cout << "Kp: " << params[0] << " Ki: " << params[1] << " Kd: " << params[2] << std::endl;
 }
 
 void TWIDDLE::SetError(const double cte){

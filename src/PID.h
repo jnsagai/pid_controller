@@ -32,7 +32,7 @@ class PID {
    */
   double TotalError();
 
-  void SetGains(const std::vector<double> &gains);
+  void SetGains(const double Kp_G, const double Ki_G, const double Kd_G);                
 
   /**
    * 

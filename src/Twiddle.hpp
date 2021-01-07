@@ -36,12 +36,13 @@ private:
     double best_error;
     double tolerance;
 
-    unsigned int param_index;
-
     States curr_state;
-
+    unsigned int param_index;
+    
     std::vector<double> params;
     std::vector<double> d_params;
+
+    
 
     void ChangeParamIndex();
 };
