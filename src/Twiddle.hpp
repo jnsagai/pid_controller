@@ -8,7 +8,7 @@ public:
     /**
    * Constructor
    */
-    TWIDDLE(double tolerance);
+    TWIDDLE(double tolerance, std::vector<double> init_params);
 
     /**
    * Destructor.
@@ -20,6 +20,8 @@ public:
     void SetError(const double cte);
 
     std::vector<double> GetParams();
+
+    bool DoneTwiddle();
 
 private:
 
@@ -36,8 +38,13 @@ private:
     double best_error;
     double tolerance;
 
+    unsigned int inter;
+    unsigned int  num_interactions;
+    
+
     States curr_state;
     unsigned int param_index;
+    
     
     std::vector<double> params;
     std::vector<double> d_params;

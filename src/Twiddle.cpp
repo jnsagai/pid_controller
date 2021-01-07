@@ -3,12 +3,14 @@
 #include <numeric>
 #include <iostream>
 
-TWIDDLE::TWIDDLE(double tolerance) 
+TWIDDLE::TWIDDLE(double tolerance, std::vector<double> init_params) 
     :   tolerance(tolerance),
         curr_state(START),
         param_index(0),
-        params({ 0.0, 0.0, 0.0 }),
-        d_params({ 1.0, 1.0, 1.0 })        
+        num_interactions(5000),
+        inter(0),
+        params({ init_params[0], init_params[1], init_params[2] }),
+        d_params({ 1.0, 1.0, 1.0 })
     {}
 
 TWIDDLE::~TWIDDLE() {}
@@ -81,4 +83,9 @@ std::vector<double> TWIDDLE::GetParams(){
 
 void TWIDDLE::ChangeParamIndex(){
     param_index = (param_index + 1) % params.size();
+}
+
+bool TWIDDLE::DoneTwiddle(){
+    inter++;
+    return (inter >= num_interactions);
 }

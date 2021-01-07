@@ -15,6 +15,12 @@ constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
 double rad2deg(double x) { return x * 180 / pi(); }
 
+
+// Some constants
+const double THROTTLE = 0.3;
+
+const bool run_twiddle = false;
+
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
 // else the empty string "" will be returned.
@@ -38,14 +44,14 @@ int main()
 {
   uWS::Hub h;
 
-  PID pid;
-  TWIDDLE twiddle(0.2);  
-  /**
-   * TODO: Initialize the pid variable.
-   */
-  pid.Init(0.0, 0.0, 0.0);
+  PID pid_angle;
 
-  h.onMessage([&pid, &twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  std::vector<double> init_params = { 0.1, 0.4, 3.2 };
+  TWIDDLE twiddle(0.2, init_params);  
+
+  pid_angle.Init(0.1251, 0.0013, 8.2974);
+
+  h.onMessage([&pid_angle, &twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -74,20 +80,26 @@ int main()
            * NOTE: Feel free to play around with the throttle and speed.
            *   Maybe use another PID controller to control the speed!
            */
-          pid.UpdateError(cte);
-          twiddle.SetError(cte);
-          twiddle.Run();
-          gains = twiddle.GetParams();
-          pid.SetGains(gains[0], gains[1], gains[2]);
+          pid_angle.UpdateError(cte);
+          if(run_twiddle && !twiddle.DoneTwiddle()){
+            twiddle.SetError(cte);
+            twiddle.Run();
+            gains = twiddle.GetParams();
+            pid_angle.SetGains(gains[0], gains[1], gains[2]);
+          }
+          //pid_angle.SetGains(0.135, 0.0015, 8.51561);
 
-          steer_value -= pid.TotalError();
+          steer_value = pid_angle.CalcSteerAngle();
+
+          if(steer_value > 1) { steer_value = 1;}
+          if(steer_value < -1) { steer_value = -1;}
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value
                     << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.2;
+          msgJson["throttle"] = THROTTLE;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
