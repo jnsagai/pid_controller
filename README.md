@@ -1,13 +1,33 @@
 # PID Controller
 Self-Driving Car Engineer Nanodegree Program
 
-In this project a PID controller is implemented using C++ to maneuver the Udacity simulator's vehicle around the track.
-The Udacity simulator provides the cross track error (CTE) and the velocity (mph). The the appropriate steering angle for the vehicle is calculated using an optmized PID controller where each control parameter is fine-tuned using a method called Gradient Descent or Twiddle.
+In this project, a PID controller is implemented using C++ to maneuver the Udacity simulator's vehicle around the track.
+The Udacity simulator provides the cross track error (CTE) and the velocity (mph). The appropriate steering angle for the vehicle is calculated using an optimized PID controller where each control parameter is fine-tuned using a method called Gradient Descent or Twiddle.
 
 ## Rubric Points
 
-In this project a PID controller is implemented using C++ to maneuver the Udacity simulator's vehicle around the track.
-The Udacity simulato
+The PID Controller
+----
+
+The main goal of this project is to implement a PID (Proportional-Integral-Derivative) Controller in order to try to minimize the CTE ( cross track error ), which represent the error between the current position of the vehicle and the target position, where in this case is represented by the center of the road in the simulator.
+
+The PID controller is based on a closed-loop system and it includes a feedback control system. This system evaluates the feedback variable using a fixed point to generate an error signal( in our case, the error signal is the CTE ). Based on that, it alters the system output. This procedure will continue till the error reaches zero otherwise the value of the feedback variable becomes equivalent to a fixed point. The image below represents a typical implementation of a PID controller:
+
+![alt text](https://www.controleng.com/wp-content/uploads/sites/2/2014/08/CTL1408_WEB_F1_PID-Valin_Fig1_PID-control_loopslider.jpg)
+
+The Proportional gain (P) in this case is responsible for steer the vehicle proportionally in the opposite direction of the CTE, in other words, the higher is the CTE, the higher will be the P component with the opposite signal. However, if we implement only the P controller the vehicle will tend to bounce around the target track and generate an overshooting, as can be seen in this [demonstration](https://github.com/jnsagai/pid_controller/blob/master/videos/p_controller.mp4).
+
+The overshooting can be solved by applying another component, the Derivative gain (D). The derivative component tends to minimize the overshooting caused by the Proportional component, and then the vehicle can reach the target track in a smoother way, as can be seen in this next [demonstration](https://github.com/jnsagai/pid_controller/blob/master/videos/pd_controller.mp4), where a PD controller was applied.
+
+However, in some cases, there is the presence of a constant error, or bias, where a PD controller is not enough to eliminate it. The Integral gain (I) is then responsible for trying to eliminate this error. This [final demonstration] shows how a complete PID controller was applied in the simulation.
+
+Tuning the PID Controller
+----
+
+The main question regarding a PID controller is how to define the optimal value for each component. There are several methods used for that, like Manual Tuning, Gradient Descent (twiddle), or SGD (Stochastic Gradient Descent).
+In the specific case of this project, the first attempt was to manually tune each parameter on a try and error approach. The first step was to find a suitable value for the Proportional component, and it was not an easy task since the vehicle kept scaping from the lane. After a plausible gain was obtained, the next step was to find the Derivative gain, in order to reduce the overshooting presented by the P controller, and finally, I worked on the Integral component, which was easily tuned since the bias on the vehicle was almost inexistent. I started using the same values of the Udacity PID Lesson then I started fine tunning then until I reached the final values of Kp = 0.215, Kd = 3.521, and Ki = 0.0042.
+
+After I reached this goal, I started working on the implementation of the Twiddle algorithm, or Gradient Descent, as described in the PID Lessons. I implemented it using an FSM (Finite-State Machine) as my basic structure. After initializing the FSM and get the first error, the states transitioned between incrementing and decrementing the hyperparameters (or gains) until it reaches a minimum tolerance, defined a priori. After running this algorithm for some laps, I reached the final values of Kp = 0.1251, Kd = 8.2974, and Ki = 0.0013.
 
 ## Dependencies
 
