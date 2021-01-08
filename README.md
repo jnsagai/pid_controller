@@ -19,7 +19,7 @@ The Proportional gain (P) in this case is responsible for steer the vehicle prop
 
 The overshooting can be solved by applying another component, the Derivative gain (D). The derivative component tends to minimize the overshooting caused by the Proportional component, and then the vehicle can reach the target track in a smoother way, as can be seen in this next [demonstration](https://github.com/jnsagai/pid_controller/blob/master/videos/pd_controller.mp4), where a PD controller was applied.
 
-However, in some cases, there is the presence of a constant error, or bias, where a PD controller is not enough to eliminate it. The Integral gain (I) is then responsible for trying to eliminate this error. This [final demonstration] shows how a complete PID controller was applied in the simulation.
+However, in some cases, there is the presence of a constant error, or bias, where a PD controller is not enough to eliminate it. The Integral gain (I) is then responsible for trying to eliminate this error. This [final demonstration](https://github.com/jnsagai/pid_controller/blob/master/videos/pid_controller.mp4) shows how a complete PID controller was applied in the simulation.
 
 Tuning the PID Controller
 ----
